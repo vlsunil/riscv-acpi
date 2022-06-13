@@ -1,0 +1,143 @@
+= RISC-V IO Mapping Table (RIMT)
+[.text-center]
+*RISC-V IO Mapping Table (RIMT)*
+
+[.text-center]
+#*_DRAFT FOR REVIEW_*#
+
+This is a proposal for an ACPI representation of the relationship between
+IO devices and RISC-V IOMMU.
+
+The RISC-V IOMMU specificaiton defines an IOMMU for RISC-V platforms
+which can be a regular platform device or a PCI device connected to
+the host root port.
+
+The RISC-V IOMMU provides two stage translation, device directory table,
+command queue and fault reporting as wired interrupt or MSIx event for
+both PCI and platform devices.
+
+The RISC-V IO Mapping Table (RIMT)  provides information about the RISC-V
+IOMMU and the relationship between the IO topology and the IOMMU.
+
+.RISC-V IO Mapping Table (RIMT)
+|===
+|*Field*|*Byte Length*|*Byte Offset*|*Description*
+
+|- Signature|4|0|'RIMT' signature for the RISC-V IO Mapping Table
+|- Length|4|4|The length of the table, in bytes, of the entire RIMT
+|- Revision|1|8|The revision of the structure corresponding to the signature
+field for this table. For the RIMT confirming this revision of the
+specification, the revision is 1.
+|- Checksum|1|9|The entire table must sum to zero
+|- OEMID|6|10|
+|- OEM Table ID|8|16|
+|- OEM Revision|4|24|
+|- Creator ID|4|28|
+|- Creator Revision|4|32|
+|- Reserved|4|36|
+|- RIMT devices[n] |-|40|List of RIMT Devices. The list will contain all of the 
+structures from RIMT Device Types needed to support this platform. These devices
+are defined in the following sections. See RIMT Device Structure Types Table (Table 2).
+|===
+
+.RIMT Device Structure Types
+|===
+|*Value*|*Description*
+|0| RISC-V IOMMU device. This type of structures should be defined prior to all other devices
+in the RIMT device array. 
+|1| RISC-V PCI Root Complex device
+|2| RISC-V Platform device 
+|3-255| Reserved
+|===
+
+The IOMMU can be implemented as a regular platform device or as a device
+connected to PCIe Root Port. 
+
+.RISC-V IOMMU Device Structure
+|===
+|*Field*|*Byte Length*|*Byte Offset*|*Description*
+|Type | 1| 0| 0 -  RISC-V IOMMU device structure
+|Revision | 1| 1| 1 - Revision of this RISC-V IOMMU device structure
+|Length | 2| 2| The length of this structure (28 + 4 * N)
+|ID | 2| 4| Unique ID of this IOMMU
+|Model | 2 | 6| 0 - Generic RISC-V IOMMU
+
+All other values are reserved
+|IOMMU Base Address | 8 | 8| Base address of this IOMMU
+|Flags | 4 | 16| See IOMMU Device Flags Table (Table 4)
+|PCI Segment number| 2 | 20| Valid only if IOMMU is implemented as part of PCIe Root Port.
+|PCI B/D/F | 2 | 22| Bus/Device/Function encoded if IOMMU is implemented as part of PCIe Root Port.
+This field is valid only if the Flags field indicates it. Otherwise should be ignored.
+|Number of interrupts | 2 | 24| Number of interrupts in the interrupts array.
+This can be zero if MSI is supported.
+|Interrupts Offset | 2| 26| The offset from ths start of this device to the start
+of the interrupt array. A value of 0 represents only MSIs are supported.
+4+|List of interrupts.
+| Interrupts Array | 4 * N | - | Array of interrupt numbers.
+|===
+
+.RISC-V IOMMU device Flags
+|===
+|*Field Name*|*Bit Length*|*Bit Offset*|*Description*
+|PCIe RP device | 1 | 0| A one indicates the IOMMU is implemented at PCIe Root Port.
+Otherwise it is implemented as a platform device.
+|Reserved| 31 | 1| 
+|===
+
+This table provides relationship between the PCI Root Complex Devices and IOMMU.
+
+.RISC-V PCI Root Complex Device Structure
+|===
+|*Field*|*Byte Length*|*Byte Offset*|*Description*
+|Type | 1| 0| 1 -  RISC-V PCI Root Complex device structure 
+|Revision | 1| 1| 1 - Revision of this structure
+|Length | 2| 2| The length of this structure (20 + 16 * N)
+|ID | 2| 4| Unique ID. It can be simply the array index in the RIMT devices array.
+|Reserved | 2 | 6| Must be zero
+| Flags | 4 | 8| TBD
+|PCI Segment number| 2 | 12| Should match with _SEG method and MCFG.
+|Mapping Array Offset | 2| 14| The offset from ths start of this device to the start of
+the ID mapping array
+| Number of mappings | 2 | 16| Number of mappings in the ID mapping array
+|Reserved | 2 | 18| Must be zero
+4+|List of mappings
+| ID Mapping Array | 16 * N | - | Array of ID mapping structures. See RISC-V ID Mapping Structure (Table 6).
+|===
+
+The RISC-V ID Mapping Table provides information on how devices are
+connected to an IOMMU.
+
+.RISC-V ID Mapping Structure
+|===
+|*Field*|*Byte Length*|*Byte Offset*|*Description*
+|Source ID Base | 4| 0| Lowest Source ID
+|Destination Device ID Base | 4| 4| Lowest destination device ID of the IOMMU
+|Number of IDs | 4| 8| Number of IDs
+|Destination IOMMU Offset | 4| 12| The destination IOMMU to which these mappings are done. 
+This field is the offset of the RISC-V IOMMU device to the start of the RIMT table. 
+|===
+
+There can be non-PCI platform devices which are enumerated using Differentiated System Description Table(DSDT).
+These devices can have one or more source IDs in the mapping table. But they can have its own scheme
+to define the source IDs. Hence, those source IDs can be unique within the ACPI device only.
+
+.RISC-V Platform Device Structure
+|===
+|*Field*|*Byte Length*|*Byte Offset*|*Description*
+|Type | 1| 0| 2 -  RISC-V Platform Device Structure 
+|Revision | 1| 1| 1 - Revision of this structure
+|Length | 2| 2| The length of this structure (16 + M + 16 * N)
+|ID | 2| 4| Unique ID of this device 
+|Reserved | 2 | 6| Must be zero
+| Flags | 4 | 8| TBD
+|Mapping Array Offset | 2| 12| The offset from ths start of this device to the start of
+the ID mapping array. The offset should be aligned at 4bytes.
+| Number of mappings | 2 | 14| Number of mappings in the ID mapping array
+| Name | M | 16| Null terminated ASCII string. Full path to the device object in the ACPI namespace.
+4+|List of mappings.
+| ID Mapping Array | 16 * N | - | Array of ID mapping structures. See RISC-V ID Mapping Structure (Table 6).
+|===
+
+== References
+* link:https://github.com/riscv-non-isa/riscv-iommu/blob/main/riscv-iommu.pdf[RISC-V IOMMU Specification]
+* link:https://uefi.org/sites/default/files/resources/ACPI_Spec_6_4_Jan22.pdf[ACPI Specification], Version: v6.4
