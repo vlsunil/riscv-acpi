@@ -69,11 +69,11 @@ connected to PCIe Root Port.
 
 All other values are reserved
 |IOMMU Base Address | 8 | 8| Base address where IOMMU registers are mapped. Valid only for memory
-mapped IOMMU. If IOMMU is a PCIe device, the BAR will be the mapped address of IOMMU registers.
+mapped IOMMU. If IOMMU is a PCI device, the BAR will be the mapped address of IOMMU registers.
 |Flags | 4 | 16
 a| 
 
-* Bit 0: IOMMU is a PCIe device
+* Bit 0: IOMMU is a PCI device
 ** 1: The IOMMU is implemented as a PCI device
 ** 0: The IOMMU is implemented as a memory mapped  device
 
@@ -83,8 +83,8 @@ a|
 
 * Bit [31-2]: Reserved, must be zero
 
-|PCI Segment number| 2 | 20| Valid only if IOMMU is implemented as part of PCIe Root Port.
-|PCI B/D/F | 2 | 22| Bus/Device/Function encoded if IOMMU is implemented as part of PCIe Root Port.
+|PCI Segment number| 2 | 20| Valid only if IOMMU is implemented as a PCI device
+|PCI B/D/F | 2 | 22| Bus/Device/Function encoded if IOMMU is implemented as as a PCI device.
 This field is valid only if the Flags field indicates it. Otherwise should be ignored.
 |Proximity Domain | 4 | 24 | The Proximity Domain to which this IOMMU belongs. This is valid
 only when the "Proximity Domain Valid" flag is set
