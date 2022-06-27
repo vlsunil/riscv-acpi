@@ -84,7 +84,7 @@ a|
 * Bit [31-2]: Reserved, must be zero
 
 |PCI Segment number| 2 | 20| Valid only if IOMMU is implemented as a PCI device
-|PCI B/D/F | 2 | 22| Bus/Device/Function encoded if IOMMU is implemented as as a PCI device.
+|PCI B/D/F | 2 | 22| Bus/Device/Function encoded if IOMMU is implemented as a PCI device.
 This field is valid only if the Flags field indicates it. Otherwise should be ignored.
 |Proximity Domain | 4 | 24 | The Proximity Domain to which this IOMMU belongs. This is valid
 only when the "Proximity Domain Valid" flag is set
@@ -198,7 +198,7 @@ the ID mapping array
 
 == Examples
 
-image::/home/sunil/Downloads/iommu.drawio.png[]
+image::iommu.png[]
 
 .PCI RC device ID mapping structure for Dw = 7, Memory mapped IOMMU
 |===
