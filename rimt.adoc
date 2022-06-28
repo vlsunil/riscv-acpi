@@ -141,7 +141,7 @@ a|
 
 * Bit [31-2]: Reserved, must be zero
 
-|Id mapping array offset | 2| 12| The offset from ths start of this device to the start of
+|ID mapping array offset | 2| 12| The offset from ths start of this device to the start of
 the ID mapping array
 | Number of ID mappings | 2 | 14| Number of elements in the ID mapping array. The value
 in this field follows N-1 convention. For ex: If this field value is 0, it really means the
@@ -196,7 +196,7 @@ to define the source IDs. Hence, those source IDs can be unique within the ACPI 
 |Length | 2| 2| The length of this structure (12 + M + 20 * N)
 |ID | 2| 4| Unique ID of this device 
 |Reserved | 2 | 6| Must be zero
-|Id mapping array offset | 2| 8| The offset from ths start of this device to the start of
+|ID mapping array offset | 2| 8| The offset from ths start of this device to the start of
 the ID mapping array
 | Number of ID mappings | 2 | 10| Number of elements in the ID mapping array. The value
 in this field follows N-1 convention. For ex: If this field value is 0, it really means the
