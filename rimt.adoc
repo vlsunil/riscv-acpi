@@ -168,13 +168,13 @@ This field is the offset of the RISC-V IOMMU device to the start of the RIMT tab
 |Flags | 4| 16
 a|
 
-* Bit 0: ATS Enabled
-** 0: ATS is not enabled for the devices in this mapping
-** 1: ATS is enabled for the devices in this mapping
+* Bit 0: ATS Required
+** 0: ATS does not need to be enabled for the device to function.
+** 1: ATS needs to be enabled for the device to function.
 
-* Bit 1: PRI Enabled
-** 0: PRI is not enabled for the devices in this mapping
-** 1: PRI is enabled for the devices in this mapping
+* Bit 1: PRI Required
+** 0: PRI does not need to be enabled for the device to function.
+** 1: PRI needs to be enabled for the device to function.
 
 * Bit 2: Is RCiEP
 ** 0: Source is not RC integrated End Point Device (RCiEP)
