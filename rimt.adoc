@@ -215,17 +215,25 @@ array has 1 element.
 
 image::iommu.png[]
 
-.PCIe RC device ID mapping structure for Dw = 7, Memory mapped IOMMU
+.PCIe RC device ID mapping structure for device_id width = 7, Memory mapped IOMMU
 |===
 |*Source ID Base (RID)* | *Desination  Device ID Base* | *Number of IDs* | *Destination IOMMU*
 |0x0000 - 0x000F | 0x0 | 0x10 | IOMMU0
 |0x0100 - 0x010F | 0x10 | 0x10 | IOMMU0
-|0x0200 - 0x020F | 0x20 | 0x10 | IOMMU0
-|0x0300 - 0x030F | 0x30 | 0x10 | IOMMU0
+|0x0010 | 0x20 | 0x1 | IOMMU0
+|0x0020 | 0x30 | 0x1 | IOMMU0
 |===
 
-.Platform device ID mapping structure for Dw = 7, Memory mapped IOMMU
+.Platform device ID mapping structure for device_id width = 7, Memory mapped IOMMU
 |===
 |*Source ID Base* | *Desination  Device ID Base* | *Number of IDs* | *Destination IOMMU*
 |0x0000 | 0x40 | 0x1 | IOMMU0
+|===
+
+.PCIe RC device ID mapping structure for device_id width = 7, IOMMU as a PCIe device with BDF 0x0010
+|===
+|*Source ID Base (RID)* | *Desination  Device ID Base* | *Number of IDs* | *Destination IOMMU*
+|0x0000 - 0x000F | 0x0 | 0x10 | IOMMU1(0x0010)
+|0x0100 - 0x010F | 0x10 | 0x10 | IOMMU1(0x0010)
+|0x0020 | 0x20 | 0x1 | IOMMU1(0x0010)
 |===
